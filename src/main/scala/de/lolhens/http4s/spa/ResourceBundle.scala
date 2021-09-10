@@ -12,7 +12,7 @@ case class ResourceBundle(
 }
 
 object ResourceBundle {
-  val bootstrap: ResourceBundle = ResourceBundle(
+  val bootstrap5: ResourceBundle = ResourceBundle(
     stylesheets = Seq(Stylesheet(
       uri"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css",
       integrity = "sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC".some,
@@ -25,7 +25,7 @@ object ResourceBundle {
     ))
   )
 
-  val bootstrapIcons: ResourceBundle = ResourceBundle(
+  val bootstrapIcons1: ResourceBundle = ResourceBundle(
     stylesheets = Seq(Stylesheet(
       uri"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
     ))
