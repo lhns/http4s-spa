@@ -1,4 +1,4 @@
-package de.lolhens.cdncache
+package de.lolhens.http4s.spa
 
 import io.circe._
 import io.circe.generic.semiauto._
@@ -98,8 +98,4 @@ object ImportMap {
       )
     )
   )
-
-  def main(args: Array[String]): Unit = {
-    println(react17.rewrite(uri"https://ga.jspm.io/", uri"/cdn/jspm"))
-  }
 }
