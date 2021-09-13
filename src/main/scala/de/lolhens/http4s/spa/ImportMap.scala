@@ -2,7 +2,6 @@ package de.lolhens.http4s.spa
 
 import io.circe._
 import io.circe.generic.semiauto._
-import io.circe.syntax._
 import org.http4s.Uri
 import org.http4s.implicits._
 import scalatags.Text.all._
@@ -24,7 +23,9 @@ case class ImportMap(
     }
   )
 
-  override def toString: String = ImportMap.codec(this).spaces2
+  lazy val toJson: Json = ImportMap.codec(this)
+
+  override def toString: String = toJson.spaces2
 
   def transformUris(f: Uri => Uri): ImportMap = copy(
     imports = imports.map { case (name, uri) => (name, f(uri)) },
@@ -49,7 +50,7 @@ object ImportMap {
 
   implicit def importMap2Tag(importMap: ImportMap): Tag = script(
     tpe := "importmap",
-    raw(importMap.asJson.spaces2)
+    raw(importMap.toJson.spaces2)
   )
 
   val react17: ImportMap = ImportMap(

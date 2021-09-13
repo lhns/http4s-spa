@@ -14,7 +14,7 @@ case class ResourceBundle(
     scripts = scripts.map(e => e.withUri(f(e.uri))),
   )
 
-  def toTags: Seq[Tag] = stylesheets.map(_.toTag) ++ scripts.map(_.toTag)
+  lazy val toTags: Seq[Tag] = stylesheets.map(_.toTag) ++ scripts.map(_.toTag)
 }
 
 object ResourceBundle {

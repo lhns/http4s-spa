@@ -15,7 +15,7 @@ case class Script(
 
   override def withUri(uri: Uri): Script = copy(uri = uri)
 
-  override def toTag: Text.all.Tag = script(
+  override lazy val toTag: Text.all.Tag = script(
     src := uri.renderString,
     integrity.map(tags.integrity := _),
     crossorigin.map(tags.crossorigin := _),

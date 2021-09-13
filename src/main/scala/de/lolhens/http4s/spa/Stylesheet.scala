@@ -14,7 +14,7 @@ case class Stylesheet(
 
   override def withUri(uri: Uri): Stylesheet = copy(uri = uri)
 
-  override def toTag: Text.all.Tag = link(
+  override lazy val toTag: Text.all.Tag = link(
     rel := "stylesheet",
     href := uri.renderString,
     integrity.map(tags.integrity := _),
