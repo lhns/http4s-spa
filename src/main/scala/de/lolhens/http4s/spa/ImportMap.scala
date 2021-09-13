@@ -19,7 +19,9 @@ case class ImportMap(
 
   def ++(importMap: ImportMap): ImportMap = ImportMap(
     imports = imports ++ importMap.imports,
-    scopes = scopes ++ importMap.scopes
+    scopes = scopes ++ importMap.scopes.map {
+      case (uri, imports) => uri -> (scopes.getOrElse(uri, Map.empty) ++ imports)
+    }
   )
 
   override def toString: String = ImportMap.codec(this).spaces2
