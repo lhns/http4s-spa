@@ -6,5 +6,10 @@
 
 Helpers for building a [http4s](https://github.com/http4s/http4s) Single Page Application with [Scala.js](https://www.scala-js.org/) using ES-Modules and [Import Maps](https://github.com/WICG/import-maps).
 
+### build.sbt
+```sbt
+libraryDependencies += "de.lolhens" %% "http4s-spa" % "0.0.1"
+```
+
 ## License
 This project uses the Apache 2.0 License. See the file called LICENSE.
