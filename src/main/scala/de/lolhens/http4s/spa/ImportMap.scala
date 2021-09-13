@@ -24,49 +24,14 @@ case class ImportMap(
 
   override def toString: String = ImportMap.codec(this).spaces2
 
-  def rewrite(from: Uri, to: Uri): ImportMap = {
-    def f(uri: Uri): Uri = ImportMap.rewrite(uri, from, to)
-
-    ImportMap(
-      imports = imports.map { case (name, uri) => (name, f(uri)) },
-      scopes = scopes.map { case (uri, imports) => (f(uri), imports.map { case (name, uri) => (name, f(uri)) }) }
-    )
-  }
+  def transformUris(f: Uri => Uri): ImportMap = copy(
+    imports = imports.map { case (name, uri) => (name, f(uri)) },
+    scopes = scopes.map { case (uri, imports) => (f(uri), imports.map { case (name, uri) => (name, f(uri)) }) }
+  )
 }
 
 object ImportMap {
   val empty: ImportMap = ImportMap(imports = Map.empty)
-
-  private def rewrite(uri: Uri, from: Uri, to: Uri): Uri = {
-    val splitOption =
-      if (
-        uri.scheme == from.scheme &&
-          uri.authority == from.authority &&
-          uri.path.startsWith(from.path)
-      ) {
-        if (from.path.isEmpty) Some(0)
-        else uri.path.findSplit(from.path)
-      } else {
-        None
-      }
-
-    splitOption match {
-      case Some(split) =>
-        val newSegments = to.path.segments ++ uri.path.segments.drop(split)
-        uri.copy(
-          scheme = to.scheme,
-          authority = to.authority,
-          path = Uri.Path(
-            segments = newSegments,
-            absolute = to.path.absolute || (to.authority.nonEmpty && to.path.isEmpty && newSegments.nonEmpty),
-            endsWithSlash = uri.path.endsWithSlash
-          )
-        )
-
-      case None =>
-        uri
-    }
-  }
 
   implicit val codec: Codec[ImportMap] = {
     implicit val uriCodec: Codec[Uri] = Codec.from(
