@@ -19,6 +19,6 @@ case class Script(
     src := uri.renderString,
     integrity.map(tags.integrity := _),
     crossorigin.map(tags.crossorigin := _),
-    Option.when(async)(tags.async),
+    Some(tags.async).filter(_ => async),
   )
 }
