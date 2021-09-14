@@ -8,7 +8,7 @@ Helpers for building a [http4s](https://github.com/http4s/http4s) Single Page Ap
 
 ### build.sbt
 ```sbt
-libraryDependencies += "de.lolhens" %% "http4s-spa" % "0.0.1"
+libraryDependencies += "de.lolhens" %% "http4s-spa" % "0.1.0"
 ```
 
 ## License
