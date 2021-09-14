@@ -11,8 +11,8 @@ import org.http4s.server.staticcontent.{ResourceServiceBuilder, WebjarServiceBui
 case class SinglePageAppController[F[_] : Async](
                                                   mountPoint: Uri,
                                                   controller: Request[F] => F[SinglePageApp],
+                                                  resourceServiceBuilder: Option[ResourceServiceBuilder[F]],
                                                   webjarServiceBuilder: WebjarServiceBuilder[F] = WebjarServiceBuilder[F],
-                                                  resourceServiceBuilder: Option[ResourceServiceBuilder[F]] = None,
                                                   assetPath: Uri = uri"assets",
                                                 ) {
   val toRoutes: HttpRoutes[F] = Router[F](
