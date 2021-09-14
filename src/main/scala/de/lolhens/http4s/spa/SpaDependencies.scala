@@ -30,24 +30,24 @@ trait SpaDependency extends SpaDependencies {
 trait SpaUriDependency extends SpaDependency {
   override type Self <: SpaUriDependency
 
+  override def transformUris(f: Uri => Uri): Self = withUri(f(uri))
+
   def uri: Uri
 
   def withUri(uri: Uri): Self
-
-  override def transformUris(f: Uri => Uri): Self = withUri(f(uri))
-}
-
-case class SpaDependencyBundle(dependencies: SpaDependency*) extends SpaDependencies {
-  override type Self = SpaDependencyBundle
-
-  override protected def self: SpaDependencyBundle = this
-
-  override def transformUris(f: Uri => Uri): SpaDependencyBundle = SpaDependencyBundle(dependencies.map(_.transformUris(f)): _*)
-
-  override def recurse: Seq[SpaDependency] = dependencies.flatMap(_.recurse)
 }
 
 object SpaDependencies {
+  def apply(dependencies: SpaDependency*): SpaDependencies = new SpaDependencies {
+    override type Self = SpaDependencies
+
+    override protected def self: SpaDependencies = this
+
+    override def transformUris(f: Uri => Uri): SpaDependencies = SpaDependencies(dependencies.map(_.transformUris(f)): _*)
+
+    override def recurse: Seq[SpaDependency] = dependencies.flatMap(_.recurse)
+  }
+
   val esModuleShims: Script = Script(
     uri"https://ga.jspm.io/npm:es-module-shims@0.10.1/dist/es-module-shims.min.js",
     async = true
@@ -67,7 +67,7 @@ object SpaDependencies {
     )
   )
 
-  val bootstrap5: SpaDependencies = SpaDependencyBundle(
+  val bootstrap5: SpaDependencies = SpaDependencies(
     Stylesheet(
       uri"https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css",
       integrity = "sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU".some,
@@ -80,7 +80,7 @@ object SpaDependencies {
     )
   )
 
-  val bootstrapIcons1: SpaDependencies = SpaDependencyBundle(
+  val bootstrapIcons1: SpaDependencies = SpaDependencies(
     Stylesheet(
       uri"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
     )
