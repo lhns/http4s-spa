@@ -17,16 +17,19 @@ case class SinglePageAppController[F[_] : Async](
                                                   assetPath: Uri = uri"assets",
                                                 ) {
   val toRoutes: HttpRoutes[F] = Router[F](
-    Uri.Root.resolve(assetPath).renderString -> {
+    assetPath.rebaseRelative(Uri.Root).renderString -> {
       webjarServiceBuilder.toRoutes <+>
         resourceServiceBuilder.fold(HttpRoutes.empty)(_.toRoutes)
     },
 
-    "/" -> HttpRoutes.of[F] {
-      case request if request.method == Method.GET =>
-        controller(request).map { spa =>
-          spa(mountPoint.resolve(assetPath))
-        }
+    "/" -> {
+      val mountedAssetPath = assetPath.rebaseRelative(mountPoint)
+      HttpRoutes.of[F] {
+        case request if request.method == Method.GET =>
+          controller(request).map { spa =>
+            spa(mountedAssetPath)
+          }
+      }
     }
   )
 }

@@ -17,9 +17,7 @@ package object spa {
   implicit class WebjarUriOps(val webjar: WebjarAsset) extends AnyVal {
     def uri: Uri = Uri(path = Uri.Path(Vector(Segment(webjar.library), Segment(webjar.version), Segment(webjar.asset))))
 
-    def uri(baseUri: Uri): Uri =
-      if (baseUri == Uri.empty) uri
-      else baseUri.resolve(uri)
+    def uri(baseUri: Uri): Uri = uri.rebaseRelative(baseUri)
   }
 
   private val emptyUri = Uri()
@@ -32,9 +30,9 @@ package object spa {
   }
 
   implicit class UriOps(val uri: Uri) extends AnyVal {
-    private[spa] def rebaseRelative(baseUri: Uri): Uri = {
+    def rebaseRelative(baseUri: Uri): Uri = {
       if (baseUri != Uri.empty && uri.scheme.isEmpty && uri.authority.isEmpty && !uri.path.absolute)
-        baseUri.resolve(uri)
+        uri.rewrite(Uri.Root, baseUri)
       else
         uri
     }
