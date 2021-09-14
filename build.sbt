@@ -30,9 +30,7 @@ val http4sVersion = "0.23.3"
 libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-generic" % circeVersion,
-  "io.circe" %% "circe-parser" % circeVersion,
   "org.http4s" %% "http4s-circe" % http4sVersion,
-  "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-scalatags" % http4sVersion,
   "org.http4s" %% "http4s-server" % http4sVersion,
 )

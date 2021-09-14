@@ -1,6 +1,8 @@
 package de.lolhens.http4s
 
 import org.http4s.Uri
+import org.http4s.Uri.Path.Segment
+import org.http4s.server.staticcontent.WebjarService.WebjarAsset
 import scalatags.Text.all._
 import scalatags.generic.AttrPair
 import scalatags.text.Builder
@@ -12,7 +14,31 @@ package object spa {
     val async: AttrPair[Builder, String] = attr("async").empty
   }
 
-  implicit class UriRewriteOps(val uri: Uri) extends AnyVal {
+  implicit class WebjarUriOps(val webjar: WebjarAsset) extends AnyVal {
+    def uri: Uri = Uri(path = Uri.Path(Vector(Segment(webjar.library), Segment(webjar.version), Segment(webjar.asset))))
+
+    def uri(baseUri: Uri): Uri =
+      if (baseUri == Uri.empty) uri
+      else baseUri.resolve(uri)
+  }
+
+  private val emptyUri = Uri()
+  private val RootUri = Uri(path = Uri.Path.Root)
+
+  implicit class UriCompanionOps(val self: Uri.type) extends AnyVal {
+    def empty: Uri = emptyUri
+
+    def Root: Uri = RootUri
+  }
+
+  implicit class UriOps(val uri: Uri) extends AnyVal {
+    private[spa] def rebaseRelative(baseUri: Uri): Uri = {
+      if (baseUri != Uri.empty && uri.scheme.isEmpty && uri.authority.isEmpty && !uri.path.absolute)
+        baseUri.resolve(uri)
+      else
+        uri
+    }
+
     def rewrite(from: Uri, to: Uri): Uri = {
       val splitOption =
         if (

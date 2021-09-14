@@ -2,7 +2,6 @@ package de.lolhens.http4s.spa
 
 import cats.syntax.option._
 import org.http4s.Uri
-import scalatags.Text
 import scalatags.Text.all._
 
 case class Script(
@@ -10,15 +9,18 @@ case class Script(
                    integrity: Option[String] = none,
                    crossorigin: Option[String] = none,
                    async: Boolean = false
-                 ) extends Resource {
+                 ) extends SpaUriDependency {
   override type Self = Script
+
+  override protected def self: Script = this
 
   override def withUri(uri: Uri): Script = copy(uri = uri)
 
-  override lazy val toTag: Text.all.Tag = script(
-    src := uri.renderString,
-    integrity.map(tags.integrity := _),
-    crossorigin.map(tags.crossorigin := _),
-    Some(tags.async).filter(_ => async),
-  )
+  override def toTag(baseUri: Uri): Tag =
+    script(
+      src := uri.rebaseRelative(baseUri).renderString,
+      integrity.map(tags.integrity := _),
+      crossorigin.map(tags.crossorigin := _),
+      Some(tags.async).filter(_ => async),
+    )
 }

@@ -3,7 +3,6 @@ package de.lolhens.http4s.spa
 import io.circe._
 import io.circe.generic.semiauto._
 import org.http4s.Uri
-import org.http4s.implicits._
 import scalatags.Text.all._
 
 import scala.language.implicitConversions
@@ -11,7 +10,11 @@ import scala.language.implicitConversions
 case class ImportMap(
                       imports: Map[String, Uri],
                       scopes: Map[Uri, Map[String, Uri]] = Map.empty
-                    ) {
+                    ) extends SpaDependency {
+  override type Self = ImportMap
+
+  override protected def self: ImportMap = this
+
   def withImports(imports: Map[String, Uri]): ImportMap = copy(imports = imports)
 
   def withScopes(scopes: Map[Uri, Map[String, Uri]]): ImportMap = copy(scopes = scopes)
@@ -23,14 +26,20 @@ case class ImportMap(
     }
   )
 
-  lazy val toJson: Json = ImportMap.codec(this)
-
-  override def toString: String = toJson.spaces2
-
-  def transformUris(f: Uri => Uri): ImportMap = copy(
+  override def transformUris(f: Uri => Uri): ImportMap = copy(
     imports = imports.map { case (name, uri) => (name, f(uri)) },
     scopes = scopes.map { case (uri, imports) => (f(uri), imports.map { case (name, uri) => (name, f(uri)) }) }
   )
+
+  lazy val toJson: Json = ImportMap.codec(this)
+
+  override def toTag(baseUri: Uri): Tag =
+    script(
+      tpe := "importmap",
+      raw(rebaseRelative(baseUri).toJson.spaces2)
+    )
+
+  override def toString: String = toJson.spaces2
 }
 
 object ImportMap {
@@ -47,23 +56,4 @@ object ImportMap {
 
     deriveCodec
   }
-
-  implicit def importMap2Tag(importMap: ImportMap): Tag = script(
-    tpe := "importmap",
-    raw(importMap.toJson.spaces2)
-  )
-
-  val react17: ImportMap = ImportMap(
-    imports = Map(
-      "react" -> uri"https://ga.jspm.io/npm:react@17.0.2/dev.index.js",
-      "react-dom" -> uri"https://ga.jspm.io/npm:react-dom@17.0.2/dev.index.js",
-    ),
-    scopes = Map(
-      uri"https://ga.jspm.io/" -> Map(
-        "object-assign" -> uri"https://ga.jspm.io/npm:object-assign@4.1.1/index.js",
-        "scheduler" -> uri"https://ga.jspm.io/npm:scheduler@0.20.2/dev.index.js",
-        "scheduler/tracing" -> uri"https://ga.jspm.io/npm:scheduler@0.20.2/dev.tracing.js",
-      )
-    )
-  )
 }
