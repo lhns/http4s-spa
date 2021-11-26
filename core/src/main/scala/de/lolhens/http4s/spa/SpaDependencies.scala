@@ -81,9 +81,13 @@ object SpaDependencies {
   )
 
   val bootstrapIcons1: SpaDependencies = SpaDependencies(
-    Stylesheet(
-      uri"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css"
-    )
+    Stylesheet(uri"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css")
+  )
+
+  val uikit3: SpaDependencies = SpaDependencies(
+    Stylesheet(uri"https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css"),
+    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"),
+    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit-icons.min.js")
   )
 
   val mainCss: Stylesheet = Stylesheet(uri"main.css")
