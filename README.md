@@ -13,26 +13,31 @@ Helpers for building a [http4s](https://github.com/http4s/http4s) Single Page Ap
 
 ### build.sbt
 ```sbt
-libraryDependencies += "de.lolhens" %% "http4s-spa" % "0.2.0"
+libraryDependencies += "de.lolhens" %% "http4s-spa" % "0.2.1"
 ```
 
 ## Example Setup with scalajs-react
 ### plugins.sbt
 ```sbt
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.7.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.7.1")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.1.0")
 addSbtPlugin("de.lolhens" % "sbt-scalajs-webjar" % "0.4.0")
 ```
 
 ### build.sbt
 ```sbt
+val V = new {
+  val http4s = "0.23.6"
+  val scalajsReact = "2.0.0"
+}
+
 lazy val frontend = project
   .enablePlugins(ScalaJSWebjarPlugin)
   .settings(
     libraryDependencies ++= Seq(
-      "com.github.japgolly.scalajs-react" %%% "core-bundle-cats_effect" % "2.0.0-RC2",
-      "com.github.japgolly.scalajs-react" %%% "extra" % "2.0.0-RC2",
-      "org.scala-js" %%% "scalajs-dom" % "1.1.0",
+      "com.github.japgolly.scalajs-react" %%% "core-bundle-cats_effect" % V.scalajsReact,
+      "com.github.japgolly.scalajs-react" %%% "extra" % V.scalajsReact,
+      "org.scala-js" %%% "scalajs-dom" % "2.0.0",
     ),
     scalaJSLinkerConfig ~= {
       _.withModuleKind(ModuleKind.ESModule)
@@ -43,7 +48,7 @@ lazy val frontend = project
 lazy val frontendWebjar = frontend.webjar
   .settings(
     webjarAssetReferenceType := Some("http4s"),
-    libraryDependencies += "org.http4s" %% "http4s-server" % http4sVersion,
+    libraryDependencies += "org.http4s" %% "http4s-server" % V.http4s,
   )
 
 lazy val server = project
@@ -52,10 +57,10 @@ lazy val server = project
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "de.lolhens" %% "http4s-spa" % "0.2.0",
-      "org.http4s" %% "http4s-blaze-server" % http4sVersion,
-      "org.http4s" %% "http4s-circe" % http4sVersion,
-      "org.http4s" %% "http4s-dsl" % http4sVersion,
+      "de.lolhens" %% "http4s-spa" % "0.2.1",
+      "org.http4s" %% "http4s-blaze-server" % V.http4s,
+      "org.http4s" %% "http4s-circe" % V.http4s,
+      "org.http4s" %% "http4s-dsl" % V.http4s,
     ),
   )
 ```
