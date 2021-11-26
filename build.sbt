@@ -1,54 +1,94 @@
-organization := "de.lolhens"
-name := "http4s-spa"
-version := {
-  val Tag = "refs/tags/(.*)".r
-  sys.env.get("CI_VERSION").collect { case Tag(tag) => tag }
-    .getOrElse("0.0.1-SNAPSHOT")
-}
+lazy val scalaVersions = Seq(/*"3.1.0",*/ "2.13.7", "2.12.15")
 
-scalaVersion := "2.13.6"
-crossScalaVersions := Seq("2.12.14", scalaVersion.value)
-
+ThisBuild / scalaVersion := scalaVersions.head
 ThisBuild / versionScheme := Some("early-semver")
 
-licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0"))
+lazy val commonSettings: SettingsDefinition = Def.settings(
+  organization := "de.lolhens",
+  version := {
+    val Tag = "refs/tags/(.*)".r
+    sys.env.get("CI_VERSION").collect { case Tag(tag) => tag }
+      .getOrElse("0.0.1-SNAPSHOT")
+  },
 
-homepage := Some(url("https://github.com/LolHens/http4s-spa"))
-scmInfo := Some(
-  ScmInfo(
-    url("https://github.com/LolHens/http4s-spa"),
-    "scm:git@github.com:LolHens/http4s-spa.git"
+  ThisBuild / versionScheme := Some("early-semver"),
+
+  licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0")),
+
+  homepage := Some(url("https://github.com/LolHens/http4s-spa")),
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/LolHens/http4s-spa"),
+      "scm:git@github.com:LolHens/http4s-spa.git"
+    )
+  ),
+  developers := List(
+    Developer(id = "LolHens", name = "Pierre Kisters", email = "pierrekisters@gmail.com", url = url("https://github.com/LolHens/"))
+  ),
+
+  libraryDependencies ++= Seq(
+    "ch.qos.logback" % "logback-classic" % "1.2.7" % Test,
+    "de.lolhens" %%% "munit-tagless-final" % "0.2.0" % Test,
+    "org.scalameta" %%% "munit" % "0.7.29" % Test,
+  ),
+
+  testFrameworks += new TestFramework("munit.Framework"),
+
+  Compile / doc / sources := Seq.empty,
+
+  publishMavenStyle := true,
+
+  publishTo := sonatypePublishToBundle.value,
+
+  credentials ++= (for {
+    username <- sys.env.get("SONATYPE_USERNAME")
+    password <- sys.env.get("SONATYPE_PASSWORD")
+  } yield Credentials(
+    "Sonatype Nexus Repository Manager",
+    "oss.sonatype.org",
+    username,
+    password
+  )).toList
+)
+
+lazy val commonSettings_scala2: SettingsDefinition = Def.settings(
+  addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
+)
+
+name := (core.projectRefs.head / name).value
+
+val V = new {
+  val circe = "0.14.1"
+  val http4s = "0.23.6"
+}
+
+lazy val root: Project =
+  project
+    .in(file("."))
+    .settings(commonSettings)
+    .settings(
+      publishArtifact := false,
+      publish / skip := true
+    )
+    .aggregate(core.projectRefs: _*)
+
+lazy val core = projectMatrix.in(file("core"))
+  .settings(commonSettings)
+  .customRow(
+    scalaVersions.filter(_.startsWith("2")),
+    Seq(VirtualAxis.jvm, VirtualAxis.js),
+    _.settings(commonSettings_scala2)
   )
-)
-developers := List(
-  Developer(id = "LolHens", name = "Pierre Kisters", email = "pierrekisters@gmail.com", url = url("https://github.com/LolHens/"))
-)
+  .settings(
+    name := "http4s-spa",
 
-val circeVersion = "0.14.1"
-val http4sVersion = "0.23.3"
-
-libraryDependencies ++= Seq(
-  "io.circe" %% "circe-core" % circeVersion,
-  "io.circe" %% "circe-generic" % circeVersion,
-  "org.http4s" %% "http4s-circe" % http4sVersion,
-  "org.http4s" %% "http4s-scalatags" % http4sVersion,
-  "org.http4s" %% "http4s-server" % http4sVersion,
-)
-
-addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
-
-Compile / doc / sources := Seq.empty
-
-publishMavenStyle := true
-
-publishTo := sonatypePublishToBundle.value
-
-credentials ++= (for {
-  username <- sys.env.get("SONATYPE_USERNAME")
-  password <- sys.env.get("SONATYPE_PASSWORD")
-} yield Credentials(
-  "Sonatype Nexus Repository Manager",
-  "oss.sonatype.org",
-  username,
-  password
-)).toList
+    libraryDependencies ++= Seq(
+      "io.circe" %%% "circe-core" % V.circe,
+      "io.circe" %%% "circe-generic" % V.circe,
+      "org.http4s" %%% "http4s-circe" % V.http4s,
+      "org.http4s" %%% "http4s-scalatags" % V.http4s, // TODO: waiting for scala 3 support
+      "org.http4s" %%% "http4s-server" % V.http4s,
+    ),
+  )
+  .jvmPlatform(scalaVersions)
+  .jsPlatform(scalaVersions)
