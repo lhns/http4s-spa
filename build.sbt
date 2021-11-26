@@ -11,8 +11,6 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
       .getOrElse("0.0.1-SNAPSHOT")
   },
 
-  ThisBuild / versionScheme := Some("early-semver"),
-
   licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0")),
 
   homepage := Some(url("https://github.com/LolHens/http4s-spa")),
