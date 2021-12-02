@@ -1,4 +1,4 @@
-lazy val scalaVersions = Seq(/*"3.1.0",*/ "2.13.7", "2.12.15")
+lazy val scalaVersions = Seq("3.1.0", "2.13.7", "2.12.15")
 
 ThisBuild / scalaVersion := scalaVersions.head
 ThisBuild / versionScheme := Some("early-semver")
@@ -80,7 +80,7 @@ lazy val core = projectMatrix.in(file("core"))
       "io.circe" %%% "circe-core" % V.circe,
       "io.circe" %%% "circe-generic" % V.circe,
       "org.http4s" %%% "http4s-circe" % V.http4s,
-      "org.http4s" %%% "http4s-scalatags" % V.http4s, // TODO: waiting for scala 3 support
+      "org.http4s" %%% "http4s-scalatags" % V.http4s,
       "org.http4s" %%% "http4s-server" % V.http4s,
     ),
   )
