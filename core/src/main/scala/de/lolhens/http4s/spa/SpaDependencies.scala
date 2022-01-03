@@ -55,6 +55,19 @@ object SpaDependencies {
 
   val react17: ImportMap = ImportMap(
     imports = Map(
+      "react" -> uri"https://ga.jspm.io/npm:react@17.0.2/index.js",
+      "react-dom" -> uri"https://ga.jspm.io/npm:react-dom@17.0.2/index.js",
+    ),
+    scopes = Map(
+      uri"https://ga.jspm.io/" -> Map(
+        "object-assign" -> uri"https://ga.jspm.io/npm:object-assign@4.1.1/index.js",
+        "scheduler" -> uri"https://ga.jspm.io/npm:scheduler@0.20.2/index.js",
+      )
+    )
+  )
+
+  val react17Dev: ImportMap = ImportMap(
+    imports = Map(
       "react" -> uri"https://ga.jspm.io/npm:react@17.0.2/dev.index.js",
       "react-dom" -> uri"https://ga.jspm.io/npm:react-dom@17.0.2/dev.index.js",
     ),
