@@ -1,6 +1,6 @@
 package de.lolhens.http4s.spa
 
-import cats.data.NonEmptySeq
+import cats.data.NonEmptyList
 import cats.effect.kernel.Sync
 import org.http4s.scalatags._
 import org.http4s.server.staticcontent.WebjarService.WebjarAsset
@@ -41,7 +41,7 @@ case class SinglePageApp(
         // ES Module Shims: Import maps polyfill for modules browsers without import maps support (all except Chrome 89+)
         SpaDependencies.esModuleShims.toTag(assetBaseUri),
         //importMaps.map(_.toTag(assetBaseUri)), TODO: multiple import maps not supported
-        NonEmptySeq.fromSeq(importMaps).map(_.reduce.toTag(assetBaseUri)),
+        NonEmptyList.fromList(importMaps.toList).map(_.reduce.toTag(assetBaseUri)),
         jsCss.map(_.toTag(assetBaseUri)),
       ),
       body(
