@@ -8,7 +8,8 @@ case class Script(
                    uri: Uri,
                    integrity: Option[String] = none,
                    crossorigin: Option[String] = none,
-                   async: Boolean = false
+                   async: Boolean = false,
+                   module: Boolean = false,
                  ) extends SpaUriDependency {
   override type Self = Script
 
@@ -22,5 +23,6 @@ case class Script(
       integrity.map(tags.integrity := _),
       crossorigin.map(tags.crossorigin := _),
       Some(tags.async).filter(_ => async),
+      Some(tpe := "module").filter(_ => module),
     )
 }

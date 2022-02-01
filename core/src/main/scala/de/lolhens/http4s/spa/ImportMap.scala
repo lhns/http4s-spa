@@ -1,5 +1,6 @@
 package de.lolhens.http4s.spa
 
+import cats.kernel.Semigroup
 import io.circe._
 import io.circe.generic.semiauto._
 import org.http4s.Uri
@@ -9,7 +10,7 @@ import scala.language.implicitConversions
 
 case class ImportMap(
                       imports: Map[String, Uri],
-                      scopes: Map[Uri, Map[String, Uri]] = Map.empty
+                      scopes: Map[Uri, Map[String, Uri]] = Map.empty,
                     ) extends SpaDependency {
   override type Self = ImportMap
 
@@ -18,13 +19,6 @@ case class ImportMap(
   def withImports(imports: Map[String, Uri]): ImportMap = copy(imports = imports)
 
   def withScopes(scopes: Map[Uri, Map[String, Uri]]): ImportMap = copy(scopes = scopes)
-
-  def ++(importMap: ImportMap): ImportMap = ImportMap(
-    imports = imports ++ importMap.imports,
-    scopes = scopes ++ importMap.scopes.map {
-      case (uri, imports) => uri -> (scopes.getOrElse(uri, Map.empty) ++ imports)
-    }
-  )
 
   override def transformUris(f: Uri => Uri): ImportMap = copy(
     imports = imports.map { case (name, uri) => (name, f(uri)) },
@@ -44,6 +38,15 @@ case class ImportMap(
 
 object ImportMap {
   val empty: ImportMap = ImportMap(imports = Map.empty)
+
+  implicit val semigroup: Semigroup[ImportMap] = Semigroup.instance { (a, b) =>
+    ImportMap(
+      imports = a.imports ++ b.imports,
+      scopes = a.scopes ++ b.scopes.map {
+        case (uri, imports) => uri -> (a.scopes.getOrElse(uri, Map.empty) ++ imports)
+      }
+    )
+  }
 
   implicit val codec: Codec[ImportMap] = {
     implicit val uriCodec: Codec[Uri] = Codec.from(

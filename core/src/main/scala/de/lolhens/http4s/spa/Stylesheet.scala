@@ -7,7 +7,7 @@ import scalatags.Text.all._
 case class Stylesheet(
                        uri: Uri,
                        integrity: Option[String] = none,
-                       crossorigin: Option[String] = none
+                       crossorigin: Option[String] = none,
                      ) extends SpaUriDependency {
   override type Self = Stylesheet
 
