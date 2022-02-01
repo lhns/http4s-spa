@@ -16,11 +16,14 @@ case class SinglePageApp(
                           metaAttributes: Map[String, String] = Map.empty,
                           rootDivId: String = "root",
                         ) {
-  private val jsCss: Seq[SpaDependency] = dependencies.flatMap(_.recurse).collect {
-    case script: Script => script
-    case inlineScript: InlineScript => inlineScript
+  private val css: Seq[SpaDependency] = dependencies.flatMap(_.recurse).collect {
     case stylesheet: Stylesheet => stylesheet
     case inlineStylesheet: InlineStylesheet => inlineStylesheet
+  }
+
+  private val js: Seq[SpaDependency] = dependencies.flatMap(_.recurse).collect {
+    case script: Script => script
+    case inlineScript: InlineScript => inlineScript
   }
 
   private val importMaps: Seq[ImportMap] = dependencies.flatMap(_.recurse).collect {
@@ -38,13 +41,14 @@ case class SinglePageApp(
         tag("title")(title),
         meta(name := "viewport", content := "width=device-width, initial-scale=1"),
         metaTags,
+        css.map(_.toTag(assetBaseUri)),
+      ),
+      body(
         // ES Module Shims: Import maps polyfill for modules browsers without import maps support (all except Chrome 89+)
         SpaDependencies.esModuleShims.toTag(assetBaseUri),
         //importMaps.map(_.toTag(assetBaseUri)), TODO: multiple import maps not supported
         NonEmptyList.fromList(importMaps.toList).map(_.reduce.toTag(assetBaseUri)),
-        jsCss.map(_.toTag(assetBaseUri)),
-      ),
-      body(
+        js.map(_.toTag(assetBaseUri)),
         div(id := rootDivId),
         script(tpe := "module", src := webjar.uri(assetBaseUri).renderString),
       )
