@@ -13,7 +13,7 @@ Helpers for building a [http4s](https://github.com/http4s/http4s) Single Page Ap
 
 ### build.sbt
 ```sbt
-libraryDependencies += "de.lolhens" %% "http4s-spa" % "0.3.0"
+libraryDependencies += "de.lolhens" %% "http4s-spa" % "0.3.1"
 ```
 
 ## Example Setup with scalajs-react
