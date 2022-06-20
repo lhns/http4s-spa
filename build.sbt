@@ -1,4 +1,4 @@
-lazy val scalaVersions = Seq(/*"3.1.0", */ "2.13.8", "2.12.15")
+lazy val scalaVersions = Seq("3.1.2", "2.13.8", "2.12.16")
 
 ThisBuild / scalaVersion := scalaVersions.head
 ThisBuild / versionScheme := Some("early-semver")
@@ -21,11 +21,11 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
     )
   ),
   developers := List(
-    Developer(id = "LolHens", name = "Pierre Kisters", email = "pierrekisters@gmail.com", url = url("https://github.com/LolHens/"))
+    Developer(id = "lhns", name = "Pierre Kisters", email = "pierrekisters@gmail.com", url = url("https://github.com/lhns/"))
   ),
 
   libraryDependencies ++= Seq(
-    "ch.qos.logback" % "logback-classic" % "1.2.10" % Test,
+    "ch.qos.logback" % "logback-classic" % "1.2.11" % Test,
     "de.lolhens" %%% "munit-tagless-final" % "0.2.0" % Test,
     "org.scalameta" %%% "munit" % "0.7.29" % Test,
   ),
@@ -57,8 +57,9 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
 name := (core.projectRefs.head / name).value
 
 val V = new {
-  val circe = "0.14.1"
-  val http4s = "0.23.9"
+  val circe = "0.14.2"
+  val http4s = "0.23.12"
+  val http4sScalatags = "0.24.0"
 }
 
 lazy val root: Project =
@@ -80,9 +81,9 @@ lazy val core = projectMatrix.in(file("core"))
       "io.circe" %%% "circe-core" % V.circe,
       "io.circe" %%% "circe-generic" % V.circe,
       "org.http4s" %%% "http4s-circe" % V.http4s,
-      "org.http4s" %%% "http4s-scalatags" % V.http4s,
+      "org.http4s" %%% "http4s-scalatags" % V.http4sScalatags,
       "org.http4s" %%% "http4s-server" % V.http4s,
     ),
   )
   .jvmPlatform(scalaVersions)
-  /*.jsPlatform(scalaVersions)*/
+//.jsPlatform(scalaVersions)
