@@ -1,4 +1,4 @@
-lazy val scalaVersions = Seq("3.1.2", "2.13.8", "2.12.16")
+lazy val scalaVersions = Seq("3.1.3", "2.13.8", "2.12.16")
 
 ThisBuild / scalaVersion := scalaVersions.head
 ThisBuild / versionScheme := Some("early-semver")
@@ -58,7 +58,7 @@ name := (core.projectRefs.head / name).value
 
 val V = new {
   val circe = "0.14.2"
-  val http4s = "0.23.12"
+  val http4s = "0.23.13"
   val http4sScalatags = "0.24.0"
 }
 
