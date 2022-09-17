@@ -58,7 +58,7 @@ name := (core.projectRefs.head / name).value
 
 val V = new {
   val circe = "0.14.3"
-  val http4s = "0.23.15"
+  val http4s = "0.23.16"
   val http4sScalatags = "0.24.0"
 }
 
