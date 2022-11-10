@@ -27,7 +27,7 @@ addSbtPlugin("de.lolhens" % "sbt-scalajs-webjar" % "0.4.0")
 ### build.sbt
 ```sbt
 val V = new {
-  val http4s = "0.23.12"  
+  val http4s = "0.23.16"  
   val http4sSpa = "0.6.0"
   val scalajsDom = "2.0.0"
   val scalajsReact = "2.0.0"
@@ -60,9 +60,9 @@ lazy val server = project
   .settings(
     libraryDependencies ++= Seq(
       "de.lhns" %% "http4s-spa" % V.http4sSpa,
-      "org.http4s" %% "http4s-blaze-server" % V.http4s,
       "org.http4s" %% "http4s-circe" % V.http4s,
       "org.http4s" %% "http4s-dsl" % V.http4s,
+      "org.http4s" %% "http4s-ember-server" % V.http4s,
     ),
   )
 ```
