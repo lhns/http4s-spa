@@ -70,17 +70,23 @@ lazy val server = project
 ### Server.scala
 ```scala
 import cats.data.Kleisli
-import cats.effect.{ExitCode, IO, IOApp, Resource}
+import cats.effect._
 import cats.syntax.option._
 import com.comcast.ip4s._
 import de.lolhens.http4s.spa._
-import org.http4s.Uri
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits._
+import org.http4s.server.Server
+import org.http4s.server.middleware.ErrorAction
 import org.http4s.server.staticcontent.ResourceServiceBuilder
+import org.http4s.{HttpApp, Uri}
+import org.log4s.getLogger
+
 import scala.concurrent.duration._
 
 object Main extends IOApp {
+  private val logger = getLogger
+
   private val app = SinglePageApp(
     title = "SPA Example",
     webjar = webjars.frontend.webjarAsset,
@@ -89,7 +95,7 @@ object Main extends IOApp {
       SpaDependencies.bootstrap5,
       SpaDependencies.bootstrapIcons1,
       SpaDependencies.mainCss
-    ),
+    )
   )
 
   private val appController = SinglePageAppController[IO](
@@ -110,8 +116,8 @@ object Main extends IOApp {
       .withPort(socketAddress.port)
       .withHttpApp(ErrorAction.log(
         http = http,
-        messageFailureLogAction = (t, msg) => unsafeLogger[F].debug(t)(msg),
-        serviceErrorLogAction = (t, msg) => unsafeLogger[F].error(t)(msg)
+        messageFailureLogAction = (t, msg) => Async[F].delay(logger.debug(t)(msg)),
+        serviceErrorLogAction = (t, msg) => Async[F].delay(logger.error(t)(msg))
       ))
       .withShutdownTimeout(1.second)
       .build
