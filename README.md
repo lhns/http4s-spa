@@ -13,7 +13,7 @@ Helpers for building a [http4s](https://github.com/http4s/http4s) Single Page Ap
 
 ### build.sbt
 ```sbt
-libraryDependencies += "de.lhns" %% "http4s-spa" % "0.3.1"
+libraryDependencies += "de.lhns" %% "http4s-spa" % "0.6.0"
 ```
 
 ## Example Setup with scalajs-react
@@ -27,7 +27,9 @@ addSbtPlugin("de.lolhens" % "sbt-scalajs-webjar" % "0.4.0")
 ### build.sbt
 ```sbt
 val V = new {
-  val http4s = "0.23.6"
+  val http4s = "0.23.12"  
+  val http4sSpa = "0.6.0"
+  val scalajsDom = "2.0.0"
   val scalajsReact = "2.0.0"
 }
 
@@ -37,7 +39,7 @@ lazy val frontend = project
     libraryDependencies ++= Seq(
       "com.github.japgolly.scalajs-react" %%% "core-bundle-cats_effect" % V.scalajsReact,
       "com.github.japgolly.scalajs-react" %%% "extra" % V.scalajsReact,
-      "org.scala-js" %%% "scalajs-dom" % "2.0.0",
+      "org.scala-js" %%% "scalajs-dom" % V.scalajsDom,
     ),
     scalaJSLinkerConfig ~= {
       _.withModuleKind(ModuleKind.ESModule)
@@ -57,7 +59,7 @@ lazy val server = project
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "de.lhns" %% "http4s-spa" % "0.2.1",
+      "de.lhns" %% "http4s-spa" % V.http4sSpa,
       "org.http4s" %% "http4s-blaze-server" % V.http4s,
       "org.http4s" %% "http4s-circe" % V.http4s,
       "org.http4s" %% "http4s-dsl" % V.http4s,
@@ -70,11 +72,13 @@ lazy val server = project
 import cats.data.Kleisli
 import cats.effect.{ExitCode, IO, IOApp, Resource}
 import cats.syntax.option._
+import com.comcast.ip4s._
 import de.lolhens.http4s.spa._
 import org.http4s.Uri
-import org.http4s.blaze.server.BlazeServerBuilder
+import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits._
 import org.http4s.server.staticcontent.ResourceServiceBuilder
+import scala.concurrent.duration._
 
 object Main extends IOApp {
   private val app = SinglePageApp(
@@ -94,17 +98,23 @@ object Main extends IOApp {
     resourceServiceBuilder = ResourceServiceBuilder[IO]("/assets").some
   )
 
-  override def run(args: List[String]): IO[ExitCode] = {
-    (for {
-      ec <- Resource.eval(IO.executionContext)
-      _ <- BlazeServerBuilder[IO](ec)
-        .bindHttp(8080, "0.0.0.0")
-        .withHttpApp(appController.toRoutes.orNotFound)
-        .resource
-    } yield ())
-      .use(_ => IO.never)
-      .as(ExitCode.Success)
-  }
+  override def run(args: List[String]): IO[ExitCode] =
+    serverResource(
+      SocketAddress(host"0.0.0.0", port"8080"),
+      appController.toRoutes.orNotFound
+    ).use(_ => IO.never)
+
+  def serverResource[F[_]: Async](socketAddress: SocketAddress[Host], http: HttpApp[F]): Resource[F, Server] =
+    EmberServerBuilder.default[F]
+      .withHost(socketAddress.host)
+      .withPort(socketAddress.port)
+      .withHttpApp(ErrorAction.log(
+        http = http,
+        messageFailureLogAction = (t, msg) => unsafeLogger[F].debug(t)(msg),
+        serviceErrorLogAction = (t, msg) => unsafeLogger[F].error(t)(msg)
+      ))
+      .withShutdownTimeout(1.second)
+      .build
 }
 ```
 
