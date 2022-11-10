@@ -8,7 +8,7 @@ import scalatags.Text.all.Tag
 trait SpaDependencies {
   type Self <: SpaDependencies
 
-  protected def self: Self
+  def self: Self
 
   def transformUris(f: Uri => Uri): Self
 
@@ -41,7 +41,7 @@ object SpaDependencies {
   def apply(dependencies: SpaDependency*): SpaDependencies = new SpaDependencies {
     override type Self = SpaDependencies
 
-    override protected def self: SpaDependencies = this
+    override def self: SpaDependencies = this
 
     override def transformUris(f: Uri => Uri): SpaDependencies = SpaDependencies(dependencies.map(_.transformUris(f)): _*)
 

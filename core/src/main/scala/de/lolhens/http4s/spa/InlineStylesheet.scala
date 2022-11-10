@@ -6,7 +6,7 @@ import scalatags.Text.all._
 case class InlineStylesheet(styles: String) extends SpaDependency {
   override type Self = InlineStylesheet
 
-  override protected def self: InlineStylesheet = this
+  override def self: InlineStylesheet = this
 
   override def transformUris(f: Uri => Uri): InlineStylesheet = this
 

@@ -9,7 +9,7 @@ case class InlineScript(
                        ) extends SpaDependency {
   override type Self = InlineScript
 
-  override protected def self: InlineScript = this
+  override def self: InlineScript = this
 
   override def transformUris(f: Uri => Uri): InlineScript = this
 

@@ -13,7 +13,7 @@ case class Script(
                  ) extends SpaUriDependency {
   override type Self = Script
 
-  override protected def self: Script = this
+  override def self: Script = this
 
   override def withUri(uri: Uri): Script = copy(uri = uri)
 

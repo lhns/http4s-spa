@@ -11,7 +11,7 @@ case class Stylesheet(
                      ) extends SpaUriDependency {
   override type Self = Stylesheet
 
-  override protected def self: Stylesheet = this
+  override def self: Stylesheet = this
 
   override def withUri(uri: Uri): Stylesheet = copy(uri = uri)
 

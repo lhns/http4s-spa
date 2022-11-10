@@ -14,7 +14,7 @@ case class ImportMap(
                     ) extends SpaDependency {
   override type Self = ImportMap
 
-  override protected def self: ImportMap = this
+  override def self: ImportMap = this
 
   def withImports(imports: Map[String, Uri]): ImportMap = copy(imports = imports)
 
