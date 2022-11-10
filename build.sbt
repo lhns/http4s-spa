@@ -2,11 +2,22 @@ lazy val scalaVersions = Seq("3.2.1", "2.13.10", "2.12.17")
 
 ThisBuild / scalaVersion := scalaVersions.head
 ThisBuild / versionScheme := Some("early-semver")
+name := (core.projectRefs.head / name).value
+
+val V = new {
+  val betterMonadicFor = "0.3.1"
+  val circe = "0.14.3"
+  val http4s = "0.23.16"
+  val http4sScalatags = "0.25.0"
+  val logbackClassic = "1.4.4"
+  val munit = "0.7.29"
+  val munitTaglessFinal = "0.2.0"
+}
 
 lazy val commonSettings: SettingsDefinition = Def.settings(
   organization := "de.lolhens",
   version := {
-    val Tag = "refs/tags/(.*)".r
+    val Tag = "refs/tags/v?([0-9]+(?:\\.[0-9]+)+(?:[+-].*)?)".r
     sys.env.get("CI_VERSION").collect { case Tag(tag) => tag }
       .getOrElse("0.0.1-SNAPSHOT")
   },
@@ -25,16 +36,16 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
   ),
 
   libraryDependencies ++= Seq(
-    "ch.qos.logback" % "logback-classic" % "1.4.4" % Test,
-    "de.lolhens" %%% "munit-tagless-final" % "0.2.0" % Test,
-    "org.scalameta" %%% "munit" % "0.7.29" % Test,
+    "ch.qos.logback" % "logback-classic" % V.logbackClassic % Test,
+    "de.lolhens" %%% "munit-tagless-final" % V.munitTaglessFinal % Test,
+    "org.scalameta" %%% "munit" % V.munit % Test,
   ),
 
   testFrameworks += new TestFramework("munit.Framework"),
 
   libraryDependencies ++= virtualAxes.?.value.getOrElse(Seq.empty).collectFirst {
     case VirtualAxis.ScalaVersionAxis(version, _) if version.startsWith("2.") =>
-      compilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
+      compilerPlugin("com.olegpy" %% "better-monadic-for" % V.betterMonadicFor)
   },
 
   Compile / doc / sources := Seq.empty,
@@ -53,14 +64,6 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
     password
   )).toList
 )
-
-name := (core.projectRefs.head / name).value
-
-val V = new {
-  val circe = "0.14.3"
-  val http4s = "0.23.16"
-  val http4sScalatags = "0.25.0"
-}
 
 lazy val root: Project =
   project
