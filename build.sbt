@@ -107,4 +107,4 @@ lazy val core = projectMatrix.in(file("core"))
     ),
   )
   .jvmPlatform(scalaVersions)
-//.jsPlatform(scalaVersions)
+  .jsPlatform(scalaVersions)
