@@ -2,6 +2,7 @@ lazy val scalaVersions = Seq("3.2.1", "2.13.10", "2.12.17")
 
 ThisBuild / scalaVersion := scalaVersions.head
 ThisBuild / versionScheme := Some("early-semver")
+ThisBuild / organization := "de.lhns"
 name := (core.projectRefs.head / name).value
 
 val V = new {
@@ -15,7 +16,6 @@ val V = new {
 }
 
 lazy val commonSettings: SettingsDefinition = Def.settings(
-  organization := "de.lolhens",
   version := {
     val Tag = "refs/tags/v?([0-9]+(?:\\.[0-9]+)+(?:[+-].*)?)".r
     sys.env.get("CI_VERSION").collect { case Tag(tag) => tag }
@@ -54,15 +54,33 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
 
   publishTo := sonatypePublishToBundle.value,
 
+  sonatypeCredentialHost := {
+    if (sonatypeProfileName.value == "de.lolhens")
+      "oss.sonatype.org"
+    else
+      "s01.oss.sonatype.org"
+  },
+
   credentials ++= (for {
     username <- sys.env.get("SONATYPE_USERNAME")
     password <- sys.env.get("SONATYPE_PASSWORD")
   } yield Credentials(
     "Sonatype Nexus Repository Manager",
-    "oss.sonatype.org",
+    sonatypeCredentialHost.value,
     username,
     password
-  )).toList
+  )).toList,
+
+  pomExtra := {
+    if (sonatypeProfileName.value == "de.lolhens")
+      <distributionManagement>
+        <relocation>
+          <groupId>de.lhns</groupId>
+        </relocation>
+      </distributionManagement>
+    else
+      pomExtra.value
+  }
 )
 
 lazy val root: Project =
