@@ -49,7 +49,7 @@ object SpaDependencies {
   }
 
   val esModuleShims: Script = Script(
-    uri"https://ga.jspm.io/npm:es-module-shims@0.12.8/dist/es-module-shims.min.js",
+    uri"https://ga.jspm.io/npm:es-module-shims@1.6.2/dist/es-module-shims.min.js",
     async = true
   )
 
@@ -82,25 +82,25 @@ object SpaDependencies {
 
   val bootstrap5: SpaDependencies = SpaDependencies(
     Stylesheet(
-      uri"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",
-      integrity = "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3".some,
+      uri"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css",
+      integrity = "sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi".some,
       crossorigin = "anonymous".some,
     ),
     Script(
-      uri"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js",
-      integrity = "sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p".some,
+      uri"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js",
+      integrity = "sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3".some,
       crossorigin = "anonymous".some,
     )
   )
 
   val bootstrapIcons1: SpaDependencies = SpaDependencies(
-    Stylesheet(uri"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css")
+    Stylesheet(uri"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css")
   )
 
   val uikit3: SpaDependencies = SpaDependencies(
-    Stylesheet(uri"https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css"),
-    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"),
-    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit-icons.min.js")
+    Stylesheet(uri"https://cdn.jsdelivr.net/npm/uikit@3.15.12/dist/css/uikit.min.css"),
+    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.15.12/dist/js/uikit.min.js"),
+    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.15.12/dist/js/uikit-icons.min.js")
   )
 
   val mainCss: Stylesheet = Stylesheet(uri"main.css")

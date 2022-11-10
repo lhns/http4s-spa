@@ -15,6 +15,7 @@ case class SinglePageApp(
                           dependencies: Seq[SpaDependencies] = Seq.empty,
                           metaAttributes: Map[String, String] = Map.empty,
                           rootDivId: String = "root",
+                          esModuleShims: Option[SpaDependency] = Some(SpaDependencies.esModuleShims),
                         ) {
   private val css: Seq[SpaDependency] = dependencies.flatMap(_.recurse).collect {
     case stylesheet: Stylesheet => stylesheet
@@ -45,7 +46,7 @@ case class SinglePageApp(
       ),
       body(
         // ES Module Shims: Import maps polyfill for modules browsers without import maps support (all except Chrome 89+)
-        SpaDependencies.esModuleShims.toTag(assetBaseUri),
+        esModuleShims.map(_.toTag(assetBaseUri)),
         //importMaps.map(_.toTag(assetBaseUri)), TODO: multiple import maps not supported
         NonEmptyList.fromList(importMaps.toList).map(_.reduce.toTag(assetBaseUri)),
         js.map(_.toTag(assetBaseUri)),
