@@ -49,7 +49,7 @@ object SpaDependencies {
   }
 
   val esModuleShims: Script = Script(
-    uri"https://ga.jspm.io/npm:es-module-shims@1.6.2/dist/es-module-shims.min.js",
+    uri"https://ga.jspm.io/npm:es-module-shims@1.6.3/dist/es-module-shims.js",
     async = true
   )
 
