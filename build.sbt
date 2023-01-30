@@ -27,8 +27,8 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
   homepage := scmInfo.value.map(_.browseUrl),
   scmInfo := Some(
     ScmInfo(
-      url("https://github.com/LolHens/http4s-spa"),
-      "scm:git@github.com:LolHens/http4s-spa.git"
+      url("https://github.com/lhns/http4s-spa"),
+      "scm:git@github.com:lhns/http4s-spa.git"
     )
   ),
   developers := List(
