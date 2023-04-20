@@ -1,5 +1,6 @@
 # http4s-spa
-[![Test Workflow](https://github.com/lhns/http4s-spa/workflows/test/badge.svg)](https://github.com/lhns/http4s-spa/actions?query=workflow%3Atest)
+
+[![build](https://github.com/lhns/http4s-spa/actions/workflows/build.yml/badge.svg)](https://github.com/lhns/http4s-spa/actions/workflows/build.yml)
 [![Release Notes](https://img.shields.io/github/release/lhns/http4s-spa.svg?maxAge=3600)](https://github.com/lhns/http4s-spa/releases/latest)
 [![Maven Central](https://img.shields.io/maven-central/v/de.lhns/http4s-spa_2.13)](https://search.maven.org/artifact/de.lhns/http4s-spa_2.13)
 [![Apache License 2.0](https://img.shields.io/github/license/lhns/http4s-spa.svg?maxAge=3600)](https://www.apache.org/licenses/LICENSE-2.0)
