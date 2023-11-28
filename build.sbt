@@ -10,7 +10,7 @@ val V = new {
   val circe = "0.14.5"
   val http4s = "0.23.23"
   val http4sScalatags = "0.25.2"
-  val logbackClassic = "1.4.9"
+  val logbackClassic = "1.4.12"
   val munit = "0.7.29"
   val munitTaglessFinal = "0.2.0"
 }
