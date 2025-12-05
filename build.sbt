@@ -54,12 +54,7 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
 
   publishTo := sonatypePublishToBundle.value,
 
-  sonatypeCredentialHost := {
-    if (sonatypeProfileName.value == "de.lolhens")
-      "oss.sonatype.org"
-    else
-      "s01.oss.sonatype.org"
-  },
+  sonatypeCredentialHost := Sonatype.sonatypeCentralHost,
 
   credentials ++= (for {
     username <- sys.env.get("SONATYPE_USERNAME")
@@ -70,17 +65,6 @@ lazy val commonSettings: SettingsDefinition = Def.settings(
     username,
     password
   )).toList,
-
-  pomExtra := {
-    if (sonatypeProfileName.value == "de.lolhens")
-      <distributionManagement>
-        <relocation>
-          <groupId>de.lhns</groupId>
-        </relocation>
-      </distributionManagement>
-    else
-      pomExtra.value
-  }
 )
 
 lazy val root: Project =
