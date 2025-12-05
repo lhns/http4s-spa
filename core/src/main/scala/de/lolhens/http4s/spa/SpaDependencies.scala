@@ -49,10 +49,11 @@ object SpaDependencies {
   }
 
   val esModuleShims: Script = Script(
-    uri"https://ga.jspm.io/npm:es-module-shims@1.6.3/dist/es-module-shims.js",
+    uri"https://ga.jspm.io/npm:es-module-shims@2.6.2/dist/es-module-shims.js",
     async = true
   )
 
+  @deprecated
   val react17: ImportMap = ImportMap(
     imports = Map(
       "react" -> uri"https://ga.jspm.io/npm:react@17.0.2/index.js",
@@ -66,6 +67,7 @@ object SpaDependencies {
     )
   )
 
+  @deprecated
   val react17Dev: ImportMap = ImportMap(
     imports = Map(
       "react" -> uri"https://ga.jspm.io/npm:react@17.0.2/dev.index.js",
@@ -80,27 +82,56 @@ object SpaDependencies {
     )
   )
 
+  val react19: ImportMap = ImportMap(
+    imports = Map(
+      "react" -> uri"https://ga.jspm.io/npm:react@19.2.1/index.js",
+      "react-dom/client" -> uri"https://ga.jspm.io/npm:react-dom@19.2.1/client.js"
+    ),
+    scopes = Map(
+      uri"https://ga.jspm.io/" -> Map(
+        "react-dom" -> uri"https://ga.jspm.io/npm:react-dom@19.2.1/index.js",
+        "object-assign" -> uri"https://ga.jspm.io/npm:object-assign@4.1.1/index.js",
+        "scheduler" -> uri"https://ga.jspm.io/npm:scheduler@0.27.0/index.js"
+      )
+    )
+  )
+
+  val react19Dev: ImportMap = ImportMap(
+    imports = Map(
+      "react" -> uri"https://ga.jspm.io/npm:react@19.2.1/dev.index.js",
+      "react-dom/client" -> uri"https://ga.jspm.io/npm:react-dom@19.2.1/dev.client.js"
+    ),
+    scopes = Map(
+      uri"https://ga.jspm.io/" -> Map(
+        "react-dom" -> uri"https://ga.jspm.io/npm:react-dom@19.2.1/dev.index.js",
+        "object-assign" -> uri"https://ga.jspm.io/npm:object-assign@4.1.1/index.js",
+        "scheduler" -> uri"https://ga.jspm.io/npm:scheduler@0.27.0/dev.index.js",
+        "scheduler/tracing" -> uri"https://ga.jspm.io/npm:scheduler@0.27.0/dev.tracing.js"
+      )
+    )
+  )
+
   val bootstrap5: SpaDependencies = SpaDependencies(
     Stylesheet(
-      uri"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css",
-      integrity = "sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi".some,
+      uri"https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css",
+      integrity = "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB".some,
       crossorigin = "anonymous".some,
     ),
     Script(
-      uri"https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js",
-      integrity = "sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3".some,
+      uri"https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js",
+      integrity = "sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI".some,
       crossorigin = "anonymous".some,
     )
   )
 
   val bootstrapIcons1: SpaDependencies = SpaDependencies(
-    Stylesheet(uri"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css")
+    Stylesheet(uri"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css")
   )
 
   val uikit3: SpaDependencies = SpaDependencies(
-    Stylesheet(uri"https://cdn.jsdelivr.net/npm/uikit@3.15.12/dist/css/uikit.min.css"),
-    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.15.12/dist/js/uikit.min.js"),
-    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.15.12/dist/js/uikit-icons.min.js")
+    Stylesheet(uri"https://cdn.jsdelivr.net/npm/uikit@3.25.1/dist/css/uikit.min.css"),
+    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.25.1/dist/js/uikit.min.js"),
+    Script(uri"https://cdn.jsdelivr.net/npm/uikit@3.25.1/dist/js/uikit-icons.min.js")
   )
 
   val mainCss: Stylesheet = Stylesheet(uri"main.css")
