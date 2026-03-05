@@ -11,7 +11,7 @@ val V = new {
   val http4s = "0.23.33"
   val http4sScalatags = "0.25.2"
   val logbackClassic = "1.5.21"
-  val munit = "1.2.1"
+  val munit = "1.2.4"
   val munitTaglessFinal = "0.2.0"
 }
 
